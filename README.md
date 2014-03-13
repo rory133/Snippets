@@ -77,3 +77,37 @@ public class IsbnGenerator implements NumberGenerator {
  }
 }
 ```
+
+InjectionPoint AP
+====
+In some cases objects need to know something about the injection point into which 
+they are injected. This can be a way of configuring or changing behavior depending on the injection point.
+Let’s take for example the creation of a logger. In the JDK, to create a java.util.logging.Logger you need to set 
+the category of the class that owns it. For example, if you want a logger for the BookService you will write:
+``` 
+Logger log = Logger.getLogger(BookService.class.getName());
+```
+How would you produce a Logger that needs to know the class name of the injection point? CDI has an 
+InjectionPoint API that provides access to metadata about an injection point (see http://docs.jboss.org/cdi/api/1.0/javax/enterprise/inject/spi/InjectionPoint.html). Thus you need to 
+create a producer method that uses the InjectionPoint API to configure the right logger. Listing below shows how the createLogger method gets the injection point class name.
+
+```
+public class LoggingProducer {
+ 
+ @Produces
+ private Logger createLogger(InjectionPoint injectionPoint) {
+ return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+ }
+}
+```
+And usage:
+```
+public class BookServiceImpl {
+..
+@Inject Logger log;
+..
+}
+...
+```
+
+
