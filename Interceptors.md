@@ -171,3 +171,22 @@ public class CustomerService {
 When the bean is instantiated by the 
 container, the logMethod() will be invoked prior to the init() method. Then, if a client calls createCustomer() or 
 findCustomerById(), the profile() method will be invoked.
+
+Chaining and Excluding Interceptors
+====
+```
+@Stateless
+@Interceptors({I1.class, I2.class})
+public class CustomerService {
+  
+  public void createCustomer(Customer customer) {...}
+  
+  @Interceptors({I3.class, I4.class})
+  public Customer findCustomerById(Long id) {...}
+  
+  public void removeCustomer(Customer customer) {...}
+ 
+  @ExcludeClassInterceptors
+  public Customer updateCustomer(Customer customer) {...}
+}
+```
