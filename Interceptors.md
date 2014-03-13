@@ -96,7 +96,6 @@ public class LoggingInterceptor {
  }
 }
 ```
-
 and apply
 ```
 @Transactional
@@ -210,8 +209,30 @@ public class CustomerService {
 When a client calls the updateCustomer() method, no interceptor is invoked because the method is annotated 
 with @ExcludeClassInterceptors. When the createCustomer() method is called, interceptor I1 is executed followed 
 by interceptor I2. When the findCustomerById() method is invoked, interceptors I1, I2, I3, and I4 get executed in 
-this order.
-
+this order.Interceptor binding brings you a level of indirection, but you lose the possibility to order the interceptors as shown (@Interceptors({I1.class, I2.class})). From CDI 1.1 you can prioritize them using the 
+@javax.annotation.Priority annotation:
+```
+@Interceptor
+@Loggable
+@Priority(200)
+public class LoggingInterceptor {
+ 
+ @Inject
+ private Logger logger;
+ 
+ @AroundInvoke
+ public Object logMethod(InvocationContext ic) throws Exception {
+   logger.entering(ic.getTarget().toString(), ic.getMethod().getName());
+   try {
+     return ic.proceed();
+   } finally {
+     logger.exiting(ic.getTarget().toString(), ic.getMethod().getName());
+   }
+ }
+}
+```
+@Priority takes an integer that can take any value. The rule is that interceptors with smaller priority values are 
+called first.
 
 ====
 Create binding annotation:
