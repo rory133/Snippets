@@ -190,3 +190,7 @@ public class CustomerService {
   public Customer updateCustomer(Customer customer) {...}
 }
 ```
+When a client calls the updateCustomer() method, no interceptor is invoked because the method is annotated 
+with @ExcludeClassInterceptors. When the createCustomer() method is called, interceptor I1 is executed followed 
+by interceptor I2. When the findCustomerById() method is invoked, interceptors I1, I2, I3, and I4 get executed in 
+this order.
