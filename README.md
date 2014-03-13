@@ -78,6 +78,37 @@ public class IsbnGenerator implements NumberGenerator {
 }
 ```
 
+Disposers
+====
+For creation, CDI uses producers, and for destruction, disposers. A disposer method allows the 
+application to perform the customized cleanup of an object returned by a producer method.
+```
+public class JDBCConnectionProducer {
+ 
+ @Produces
+ private Connection createConnection() {
+ Connection conn = null;
+ try {
+ Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+ conn = DriverManager.getConnection("jdbc:derby:memory:chapter02DB", "APP", "APP");
+ 
+ } catch (InstantiationException | IllegalAccessException | ClassNotFoundException) {
+ e.printStackTrace();
+ }
+ return conn;
+ }
+ 
+ private void closeConnection(@Disposes Connection conn) throws SQLException {
+ conn.close();
+ }
+}
+```
+Destruction can be performed by a matching disposer method, defined by the same class as the producer 
+method. Each disposer method, annotated with @Disposes, must have exactly one disposed parameter of the same 
+type (here java.sql.Connection) and qualifiers (@Default) as the corresponding producer method return type 
+(annotated @Produces). The disposer method (closeConnection()) is called automatically when the client context 
+ends.
+
 InjectionPoint AP
 ====
 In some cases objects need to know something about the injection point into which 
