@@ -1,5 +1,22 @@
 Interceptors
 ===
+
+Interceptors are deployment-specific and are disabled by default. Like alternatives, interceptors have to be 
+enabled by using the CDI deployment descriptor beans.xml of the jar or Java EE module as shown:
+
+```
+<beans xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+ http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
+ version="1.1" bean-discovery-mode="all">
+ 
+ <interceptors>
+ <class>org.agoncal.book.javaee7.chapter02.LoggingInterceptor</class>
+ </interceptors>
+</beans>
+```
+
 Interceptors fall into four types:
 * Constructor-level interceptors: Interceptor associated with a constructor of the target class 
 (@AroundConstruct),
@@ -194,3 +211,60 @@ When a client calls the updateCustomer() method, no interceptor is invoked becau
 with @ExcludeClassInterceptors. When the createCustomer() method is called, interceptor I1 is executed followed 
 by interceptor I2. When the findCustomerById() method is invoked, interceptors I1, I2, I3, and I4 get executed in 
 this order.
+
+
+====
+Create binding annotation:
+```
+@InterceptorBinding
+@Target({METHOD, TYPE})
+@Retention(RUNTIME)
+public @interface Loggable { }
+```
+Define interceptor and annotate it:
+```
+@Interceptor
+@Loggable
+public class LoggingInterceptor {
+ 
+ @Inject
+ private Logger logger;
+ 
+ @AroundInvoke
+ public Object logMethod(InvocationContext ic) throws Exception {
+  logger.entering(ic.getTarget().toString(), ic.getMethod().getName());
+  try {
+    return ic.proceed();
+  } finally {
+   logger.exiting(ic.getTarget().toString(), ic.getMethod().getName());
+  }
+ }
+}
+```
+Apply
+```
+@Transactional
+@Loggable
+public class CustomerService {
+ 
+ @Inject
+ private EntityManager em;
+ 
+ public void createCustomer(Customer customer) {
+ em.persist(customer);
+ }
+ 
+ public Customer findCustomerById(Long id) {
+ return em.find(Customer.class, id);
+ }
+}
+```
+or
+```
+@Transactional
+public class CustomerService {
+ @Loggable
+ public void createCustomer(Customer customer) {...}
+ public Customer findCustomerById(Long id) {...}
+}
+```
