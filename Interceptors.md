@@ -112,3 +112,62 @@ public class CustomerService {
   public Customer updateCustomer(Customer customer) { ... }
 } 
 ```
+
+LifeCycle interceptor
+===
+Define interceptor:
+```
+public class ProfileInterceptor {
+ 
+  @Inject
+  private Logger logger;
+ 
+  @PostConstruct
+  public void logMethod(InvocationContext ic) throws Exception {
+    logger.fine(ic.getTarget().toString());
+    try {
+      ic.proceed();
+    } finally {
+      logger.fine(ic.getTarget().toString());
+    }
+  }
+ 
+  @AroundInvoke
+  public Object profile(InvocationContext ic) throws Exception {
+     long initTime = System.currentTimeMillis();
+  try {
+    return ic.proceed();
+  } finally {
+    long diffTime = System.currentTimeMillis() - initTime;
+    logger.fine(ic.getMethod() + " took " + diffTime + " millis");
+  }
+ }
+}
+```
+
+Apply:
+```
+@Transactional
+@Interceptors(ProfileInterceptor.class)
+public class CustomerService {
+ 
+  @Inject
+  private EntityManager em;
+ 
+  @PostConstruct
+  public void init() {
+  // ...
+  }
+ 
+  public void createCustomer(Customer customer) {
+   em.persist(customer);
+  }
+ 
+  public Customer findCustomerById(Long id) {
+   return em.find(Customer.class, id);
+  }
+}
+```
+When the bean is instantiated by the 
+container, the logMethod() will be invoked prior to the init() method. Then, if a client calls createCustomer() or 
+findCustomerById(), the profile() method will be invoked.
