@@ -107,7 +107,6 @@ public class BookServiceImpl {
 @Inject Logger log;
 ..
 }
-...
 ```
 
 
