@@ -1,0 +1,28 @@
+Mappings
+====
+Up to now, I have assumed that an entity gets mapped to a single table, also known as a primary table. But sometimes
+when you have an existing data model, you need to spread the data across multiple tables, or secondary tables. To do
+this, you need to use the annotation @SecondaryTable to associate a secondary table to an entity or @SecondaryTables
+(with an “s”) for several secondary tables.
+```
+@Entity
+@SecondaryTables({
+@SecondaryTable(name = "city"),
+@SecondaryTable(name = "country")
+})
+public class Address {
+@Id
+private Long id;
+private String street1;
+private String street2;
+@Column(table = "city")
+private String city;
+@Column(table = "city")
+private String state;
+@Column(table = "city")
+private String zipcode;
+@Column(table = "country")
+private String country;
+// Constructors, getters, setters
+}
+```
