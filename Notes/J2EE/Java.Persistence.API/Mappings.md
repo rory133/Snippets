@@ -29,6 +29,9 @@ private String country;
 
 Composite primary key
 ===
+Composite primary key can be implemented by two variants: @IdClass and @EmbeddedId
+
+* @EmbeddedId
 Key definition:
 ```
 @Embeddable
@@ -48,3 +51,24 @@ private String content;
 // Constructors, getters, setters
 }
 ```
+* @idClass
+
+```
+public class NewsId {
+private String title;
+private String language;
+// Constructors, getters, setters, equals, and hashcode
+}
+```
+Apply composite key:
+```
+@Entity
+@IdClass(NewsId.class)
+public class News {
+@Id private String title;
+@Id private String language;
+private String content;
+// Constructors, getters, setters
+}
+```
+
