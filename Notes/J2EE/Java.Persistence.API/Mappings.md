@@ -26,3 +26,25 @@ private String country;
 // Constructors, getters, setters
 }
 ```
+
+Composite primary key
+===
+Key definition:
+```
+@Embeddable
+public class NewsId {
+private String title;
+private String language;
+// Constructors, getters, setters, equals, and hashcode
+}
+```
+Apply composite key:
+```
+@Entity
+public class News {
+***@EmbeddedId***
+private NewsId id;
+private String content;
+// Constructors, getters, setters
+}
+```
