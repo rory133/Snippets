@@ -42,7 +42,7 @@ Apply composite key:
 ```
 @Entity
 public class News {
-***@EmbeddedId***
+@EmbeddedId
 private NewsId id;
 private String content;
 // Constructors, getters, setters
