@@ -1,10 +1,9 @@
 Main
 ===
-In previous versions of Java ee, the persistent component model was called entity Bean, or to be more precise, entity Bean CMp (Container-Managed persistence), and was associated with enterprise JavaBeans. this model of persistence lasted from J2ee 1.3 until 1.4, but was heavyweight and finally replaced by Jpa since Java ee 5. Jpa uses the term “entity” instead of “entity Bean.”
+* In previous versions of Java ee, the persistent component model was called entity Bean, or to be more precise, entity Bean CMp (Container-Managed persistence), and was associated with enterprise JavaBeans. this model of persistence lasted from J2ee 1.3 until 1.4, but was heavyweight and finally replaced by Jpa since Java ee 5. Jpa uses the term “entity” instead of “entity Bean.”
+* How does JPA map objects to a database? Through metadata.
+* XML deployment descriptors are an alternative to using annotations. However, although each annotation has
+an equivalent XML tag and vice versa, there is a difference in that the XML overrides annotations. If you annotate an
+attribute or an entity with a certain value, and at the same time you deploy an XML descriptor with a different value,
+the XML will take precedence.
 
-And how does JPA map objects to a database? Through metadata.
-
-```
-
-
-```
