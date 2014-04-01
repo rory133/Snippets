@@ -14,3 +14,4 @@ such as the column length or other schema details, can be changed depending on t
 arises when a JPA-based product needs to support several different database vendors. Certain id generation, column
 options, and so on may need to be adjusted depending on the database type in use. This may be better expressed in
 external XML deployment descriptors (one per environment) so the code doesn’t have to be modified.
+* If you want to completely ignore the annotations and define your mapping with XML only, you can add the<xml-mapping-metadata-complete> tag to the book_mapping.xml file (in this case, all the annotations will be ignored even if the XML does not contain an override).
