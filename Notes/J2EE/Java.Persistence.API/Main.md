@@ -15,3 +15,10 @@ arises when a JPA-based product needs to support several different database vend
 options, and so on may need to be adjusted depending on the database type in use. This may be better expressed in
 external XML deployment descriptors (one per environment) so the code doesn’t have to be modified.
 * If you want to completely ignore the annotations and define your mapping with XML only, you can add the<xml-mapping-metadata-complete> tag to the book_mapping.xml file (in this case, all the annotations will be ignored even if the XML does not contain an override).
+* Embeddables are objects that don’t have a persistent identity on their
+own;
+* Explicitly setting the access type on embeddables is strongly recommended to avoid mapping errors when an
+embeddable is embedded by multiple entities.
+* Since JPA 2.0 this is possible by adding the annotation @OrderColumn (its API is similar to @Column on Listing 5-11). This annotation informs the persistence provider that it is required to maintain the ordered list using a separate column where the index is stored. The @OrderColumn defines this separate column.
+* Book is an entity and extends Item. But only the attributes of Book would be mapped to a table. No attributes from
+Item appear in the table structure defined if Item isn't annotated by @Entity or @MappedSuperclass
