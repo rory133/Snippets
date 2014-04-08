@@ -150,3 +150,40 @@ public class ItemEJB implements ItemLocal, ItemSOAP, ItemRest {
 // ...
 }
 ```
+
+#### Portable JNDI
+* The Java EE specification defines portable JNDI names with the following syntax:
+```
+java:<scope>[/<app-name>]/<module-name>/<bean-name>[!<fully-qualified-interface-name>]
+```
+Each portion of the JNDI name has the following meaning:
+..* <scope> defines a series of standard namespaces that map to the various scopes of a Java EE application:
+...* global: The java:global prefix allows a component executing outside a Java EE application to access a global namespace.
+...* app: The java:app prefix allows a component executing within a Java EE application to access an application-specific namespace.
+...* module: The java:module prefix allows a component executing within a Java EE application to access a module-specific namespace.
+...* comp: The java:comp prefix is a private component-specific namespace and is not accessible by other components.
+..* <app-name> is only required if the session bean is packaged within an ear or war file. If this is
+the case, the <app-name> defaults to the name of the ear or war file (without the .ear or .war
+file extension).
+..* <module-name> is the name of the module in which the session bean is packaged. It can be an EJB module in a stand-alone jar file or a web module in a war file. The <module-name> defaults to the base name of the archive with no file extension.
+..* <bean-name> is the name of the session bean.
+..* <fully-qualified-interface-name> is the fully qualified name of each defined business interface. For the no-interface view, the name can be the fully qualified bean class name.
+
+For example we have EJB:
+```
+package org.agoncal.book.javaee7;
+@Stateless
+@Remote(ItemRemote.class)
+@Local(ItemLocal.class)
+@LocalBean
+public class ItemEJB implements ItemLocal, ItemRemote {
+// ...
+}
+```
+Once deployed, the container will create three JNDI names so an external component will be able to access the
+ItemEJB using the following global JNDI names
+```
+java:global/cdbookstore/ItemEJB!org.agoncal.book.javaee7.ItemRemote
+java:global/cdbookstore/ItemEJB!org.agoncal.book.javaee7.ItemLocal
+java:global/cdbookstore/ItemEJB!org.agoncal.book.javaee7.ItemEJB
+```
