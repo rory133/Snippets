@@ -25,21 +25,20 @@ and factories, datasources, other EJBs, environment variables, etc.) as well as 
 java.io, create a ServerSocket, load a native library, or use the AWT (Abstract Window Toolkit)or Swing APIs to
 interact with the user.
 *  Comparison Between EJB Lite and Full EJB
-|Feature|EJB Lite|Full EJB 3.2|
-|--- | --- | ---|
-|Session beans (stateless, stateful, singleton)| Yes|Yes|
-|No-interface view |Yes| Yes|
-|Local interface| Yes |Yes|
-|Interceptors| Yes |Yes|
-|Transaction support Yes |Yes|
-|Security |Yes |Yes|
-|Embeddable API| Yes| Yes|
-|Asynchronous calls |No| Yes|
-|MDBs| No| Yes|
-|Remote interface| No |Yes|
-|JAX-WS web services |No| Yes|
-|JAX-RS web services |No |Yes|
-|Timer service |No| Yes|
-|RMI/IIOP interoperability |No |Yes|
+Feature|EJB Lite|Full EJB 3.2
+Session beans (stateless, stateful, singleton)| Yes|Yes
+No-interface view |Yes| Yes
+Local interface| Yes |Yes
+Interceptors| Yes |Yes
+Transaction support Yes |Yes
+Security |Yes |Yes
+Embeddable API| Yes| Yes
+Asynchronous calls |No| Yes
+MDBs| No| Yes
+Remote interface| No |Yes
+JAX-WS web services |No| Yes
+JAX-RS web services |No |Yes
+Timer service |No| Yes
+RMI/IIOP interoperability |No |Yes
 
 
