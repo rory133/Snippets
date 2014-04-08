@@ -3,7 +3,7 @@
 * A session bean may have the following traits:
 ..* Stateless: The session bean contains no conversational state between methods, and any
 instance can be used for any client. It is used to handle tasks that can be concluded with
-a single method call.
+a single method call. For stateless session beans, the persistence context is transactional.
 ..* Stateful: The session bean contains conversational state, which must be retained across
 methods for a single user. It is useful for tasks that have to be done in several steps.
 ..* Singleton: A single session bean is shared between clients and supports concurrent access.
@@ -186,4 +186,59 @@ ItemEJB using the following global JNDI names
 java:global/cdbookstore/ItemEJB!org.agoncal.book.javaee7.ItemRemote
 java:global/cdbookstore/ItemEJB!org.agoncal.book.javaee7.ItemLocal
 java:global/cdbookstore/ItemEJB!org.agoncal.book.javaee7.ItemEJB
+```
+
+#### Aassivation and activation.
+The one-to-one correlation comes at a price because, as you might have guessed, if you have one million clients, you
+will get one million stateful beans in memory. To avoid such a big memory footprint, the container temporarily clears stateful beans from memory before the next request from the client brings them back. This technique is called passivation and activation. Passivation is the process of removing an instance from memory and saving it to a persistent location (a file on a disk, a database, etc.). It helps you to free memory and release resources (a database or JMS connections, etc.). Activation is the inverse process of restoring the state and applying it to an instance. Passivation and activation are done automatically by the container; you shouldn’t worry about doing it yourself, as it’s a container service. What you should worry about is freeing any resource (e.g., database connection, JMS factories connection, etc.) before the bean is passivated. Since EJB 3.2, you can also disable passivation as you’ll see in the next chapter with life-cycle and callback annotations.
+
+
+### Statefull session beans.
+#### Examples
+```
+@Stateful
+@StatefulTimeout(value = 20, unit = TimeUnit.SECONDS)
+public class ShoppingCartEJB {
+
+  private List<Item> cartItems = new ArrayList<>();
+  
+  public void addItem(Item item) {
+    if (!cartItems.contains(item))
+    cartItems.add(item);
+  }
+
+  public void removeItem(Item item) {
+    if (cartItems.contains(item))
+    cartItems.remove(item);
+  }
+  
+  public Integer getNumberOfItems() {
+    if (cartItems == null || cartItems.isEmpty())}
+      return 0;
+    }
+    return cartItems.size();
+  }
+
+  public Float getTotal() {
+    if (cartItems == null || cartItems.isEmpty())}
+      return 0f;
+    }
+    Float total = 0f;
+      for (Item cartItem : cartItems) {
+        total += (cartItem.getPrice());
+      }
+    return total;
+  }
+    
+  public void empty() {
+    cartItems.clear();
+  }
+  
+  // the bean instance to be permanently removed from memory after you invoke the checkout() method
+  @Remove
+  public void checkout() {
+    // Do some business logic
+    cartItems.clear();
+  }
+}
 ```
