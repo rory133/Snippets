@@ -41,4 +41,112 @@ JAX-RS web services |No |Yes
 Timer service |No| Yes
 RMI/IIOP interoperability |No |Yes
 
+* A session bean class is any standard Java class that implements business logic. The requirements to develop a session bean class are as follows:
+..* The class must be annotated with @Stateless, @Stateful, @Singleton, or the XML equivalent
+in a deployment descriptor.
+..* It must implement the methods of its interfaces, if any.
+..* The class must be defined as public, and must not be final or abstract.
+..* The class must have a public no-arg constructor that the container will use to create instances.
+..* The class must not define the finalize() method.
+..* Business method names must not start with ejb, and they cannot be final or static.
+..* The argument and return value of a remote method must be legal RMI types.
 
+* Simple EJB:
+```
+@Stateless
+public class BookEJB {
+  @PersistenceContext(unitName = "chapter07PU")
+  private EntityManager em;
+  
+  public Book findBookById(Long id) {
+    return em.find(Book.class, id);
+  }
+  
+  public Book createBook(Book book) {
+    em.persist(book);
+  return book;
+  }
+}
+```
+
+* A session bean can implement several interfaces or none. A business interface is a standard Java interface that
+does not extend any EJB-specific interfaces. Like any Java interface, business interfaces define a list of methods that will be available for the client application. They can use the following annotations:
+..* @Remote: Denotes a remote business interface. Method parameters are passed by value and
+need to be serializable as part of the RMI protocol.
+..* @Local: Denotes a local business interface. Method parameters are passed by reference from
+the client to the bean.
+
+* You cannot mark the same interface with more than one annotation. The no-interface view is a variation of the local view that exposes all public business methods of the bean class locally without the use of a separate business interface.
+
+* Listing shows a local interface (ItemLocal) and a remote interface (ItemRemote) implemented by the ItemEJB
+stateless session bean. With this code, clients will be able to invoke the findCDs() method locally or remotely as it is defined in both interfaces. The createCd() will only be accessible remotely through RMI.
+```
+@Local
+public interface ItemLocal {
+  List<Book> findBooks();
+  List<CD> findCDs();
+}
+
+@Remote
+public interface ItemRemote {
+  List<Book> findBooks();
+  List<CD> findCDs();
+  Book createBook(Book book);
+  CD createCD(CD cd);
+}
+
+@Stateless
+public class ItemEJB implements ItemLocal, ItemRemote {
+  // ...
+}
+```
+Alternatively to the code in Listing, you might specify the interface in the bean’s class. In this case, you would
+have to include the name of the interface in the @Local and @Remote annotations as shown in Listing below. This is
+handy when you have legacy interfaces where you can’t add annotations and need to use them in your session bean.
+```
+public interface ItemLocal {
+  List<Book> findBooks();
+  List<CD> findCDs();
+}
+public interface ItemRemote {
+  List<Book> findBooks();
+  List<CD> findCDs();
+  Book createBook(Book book);
+  CD createCD(CD cd);
+}
+@Stateless
+@Remote(ItemRemote.class)
+@Local(ItemLocal.class)
+@LocalBean
+public class ItemEJB implements ItemLocal, ItemRemote {
+  // ...
+}
+```
+If the bean exposes at least one interface (local or remote) it automatically loses the no-interface view. It then
+needs to explicitly specify that it exposes a no-interface view by using the @LocalBean annotation on the bean class.
+As you can see in Listing above the ItemEJB now has a local, remote, and no interface.
+
+* In addition to remote invocation through RMI, stateless beans can also be invoked remotely as SOAP web services
+or RESTful web services. Listing shows a stateless bean with a local interface, a SOAP web services endpoint (@WebService), and a RESTful web service endpoint (@Path). Note that these annotations come, respectively, from JAX-WS and JAX-RS and are not part of EJB.
+```
+@Local
+public interface ItemLocal {
+List<Book> findBooks();
+List<CD> findCDs();
+}
+@WebService
+public interface ItemSOAP {
+List<Book> findBooks();
+List<CD> findCDs();
+Book createBook(Book book);
+CD createCD(CD cd);
+}
+@Path(/items)
+public interface ItemRest {
+List<Book> findBooks();
+}
+@Stateless
+public class ItemEJB implements ItemLocal, ItemSOAP, ItemRest {
+// ...
+}
+```
