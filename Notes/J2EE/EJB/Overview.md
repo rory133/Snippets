@@ -26,6 +26,7 @@ java.io, create a ServerSocket, load a native library, or use the AWT (Abstract 
 interact with the user.
 *  Comparison Between EJB Lite and Full EJB
 |Feature|EJB Lite|Full EJB 3.2|
+|--- | --- | ---|
 |Session beans (stateless, stateful, singleton)| Yes|Yes|
 |No-interface view |Yes| Yes|
 |Local interface| Yes |Yes|
