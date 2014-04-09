@@ -283,3 +283,24 @@ public static void main(String[] args) throws NamingException {
 }
 }
 ```
+
+### Summary
+Starting with EJB 2.x, the EJB specification has evolved over the years since its creation from a heavyweight model
+where home and remote/local interfaces had to be packaged with tons of XML to a simple Java class with no interface
+and one annotation. The underlying functionality is always the same: transactional and secure business logic (more
+on that in the next chapters).
+Session beans are container-managed components that are used to develop business layers. There are three
+different types of session beans: stateless, stateful, and singleton. Stateless beans are easily scalable because they keep
+no state, live in a pool, and process tasks that can be completed in a single method call. Stateful beans have
+a one-to-one correlation with a client and can be temporarily cleared from memory using passivation and activation.
+Singletons have a unique instance shared among several clients and can be initialized at startup time, chained
+together, and customized in their concurrency access.
+Despite these differences, session beans share a common programming model. They can have a local, remote,
+or no-interface view, use annotations, or be deployed with a deployment descriptor. Session beans can use
+dependency injection to get references to several resources (JDBC datasources, persistence context, environment
+entries, etc.), as well as their runtime environment context (the SessionContext object). Since EJB 3.1, you can invoke
+methods asynchronously, look up EJBs with a portable JNDI name, or use the embeddable EJB container in the
+Java SE environment. EJB 3.2 follows the trajectory of its predecessor by bringing some minor enhancements.
+The next chapter explains the life cycle of the different session beans and how you can interact with callback
+annotations. It also shows you how to use the enhanced timer service to schedule tasks and how to set security
+authorization.
