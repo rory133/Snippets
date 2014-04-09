@@ -1,5 +1,7 @@
+### Overview.
 
-* @ConcurrencyManagement annotation for sigleton session bean. It allows to configure concurrence control for bean and has two diffirent ways:
+* @ConcurrencyManagement annotation for sigleton session bean. It allows to configure concurrence control for bean 
+and has two diffirent ways:
 1.Container-managed concurrency (CMC): The container controls concurrent access to the bean
 instance based on metadata (annotation or the XML equivalent). Used if no concurrency management configured.
 2.Bean-managed concurrency (BMC): The container allows full concurrent access and defers the
@@ -45,3 +47,4 @@ public class CacheEJB {
   }
 }
 ```
+The class has an @AccessTimeout annotation. When a concurrent access is blocked, a timeout can be specified to reject a request if the lock is not acquired within a certain time. If a addToCache() invocation is locked for more than 20 seconds, the client will get a ConcurrentAccessTimeoutException.
