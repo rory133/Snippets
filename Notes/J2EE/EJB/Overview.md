@@ -242,3 +242,44 @@ public class ShoppingCartEJB {
   }
 }
 ```
+
+### Packaging
+Since EJB 3.1, EJB Lite can also be directly packaged within a web module (war file). If you need to use the full EJB specification (e.g., remote interface, JMS, asynchronous calls . . .), you have to package it into a jar, not in
+a war.
+
+### Deployment a EJB
+The embeddable API (package javax.ejb.embeddable) allows a client to instantiate an EJB container that runs within its own JVM. The embeddable container provides
+a managed environment with support for the same basic services that exist within a Java EE container: injection,
+transactions, life cycle, and so forth. Embeddable EJB containers only work with the EJB Lite subset API (no MDBs,
+no remote calls, etc.), meaning it has the same capabilities as an EJB Lite container (but not a full EJB container). Listing below shows a main class that uses the bootstrapping API to start the container (the javax.ejb.
+embeddable.EJBContainer abstract class), looks up an EJB, and invokes methods on it.
+```
+public class Main {
+public static void main(String[] args) throws NamingException {
+    // Sets the container classpath
+    Map<String, Object> properties = new HashMap<>();
+    properties.put(EJBContainer.MODULES, new File("target/classes"));
+    
+    // Creates an Embedded Container and get the JNDI context
+    try (EJBContainer ec = EJBContainer.createEJBContainer(properties)) {
+      Context ctx = ec.getContext();
+      // Creates an instance of book
+      Book book = new Book();
+      book.setTitle("The Hitchhiker's Guide to the Galaxy");
+      book.setPrice(12.5F);
+      book.setDescription("Science fiction comedy book");
+      book.setIsbn("1-84173-742-2");
+      book.setNbOfPage(354);
+      book.setIllustrations(false);
+      // Looks up the EJB with the no-interface view
+      ItemEJB itemEJB = (ItemEJB) ctx.lookup("java:global/classes/ItemEJB ");
+      // Persists the book to the database
+      itemEJB.createBook(book);
+      // Retrieves all the books from the database
+      for (Book aBook : itemEJB.findBooks()) {
+      System.out.println(aBook);
+    }
+  }
+}
+}
+```
