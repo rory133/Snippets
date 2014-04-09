@@ -13,19 +13,24 @@ Example:
 ```
 @Stateless
 public class ItemEJB {
-@PersistenceContext(unitName = "chapter07PU")
-private EntityManager em;
-@EJB
-private CustomerEJB customerEJB;
-@Inject
-private NumberGenerator generator;
-@WebServiceRef
-private ArtistWebService artistWebService;
-private SessionContext ctx;
-@Resource
-public void setCtx(SessionContext ctx) {
-this.ctx = ctx;
-}
+  @PersistenceContext(unitName = "chapter07PU")
+  private EntityManager em;
+  
+  @EJB
+  private CustomerEJB customerEJB;
+  
+  @Inject
+  private NumberGenerator generator;
+  
+  @WebServiceRef
+  private ArtistWebService artistWebService;
+  
+  private SessionContext ctx;
+  
+  @Resource
+  public void setCtx(SessionContext ctx) {
+    this.ctx = ctx;
+  }
 //...
 }
 ```
