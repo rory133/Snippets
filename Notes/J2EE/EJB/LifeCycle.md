@@ -26,3 +26,10 @@ public class CacheEJB {
   // ...
 }
 ```
+#### Stateless and Singleton
+* Conainer creates instance by operator new.
+* Does dependency injection
+* Invokes methods annotated with @PostConstuct.
+* ...
+* @PreDestroy
+  * ddd
