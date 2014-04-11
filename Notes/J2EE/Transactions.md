@@ -4,7 +4,7 @@
 
 
 #### ACID
-
+| asd | asd |
 | ------------- | ------------- |
 | Atomicity  | A transaction is composed of one or more operations grouped in a unit of work. At the conclusion of the transaction, either these operations are all performed successfully (commit) or none of them is performed at all (rollback) if something unexpected or irrecoverable happens.  |
 | Consistency  | At the conclusion of the transaction, the data are left in a consistent state. |
