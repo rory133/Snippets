@@ -64,4 +64,4 @@ context, nothing happens; if it does, the container suspends the client’s tran
 the method, and then resumes the transaction when the method returns.
 * NEVER. The EJB method must not be invoked from a transactional client. If the client is running within a transaction context, the container throws a javax.ejb.EJBException.
 
-![Image](../blob/master/Notes/Images/Transactions_1.PNG?raw=true)
+![Image](../master/Notes/Images/Transactions_1.PNG)
