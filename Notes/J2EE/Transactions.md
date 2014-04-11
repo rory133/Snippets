@@ -68,4 +68,4 @@ Figure illustrates all the possible behaviors that an EJB can have depending on 
 client’s transaction context. For example, if the createBook() method doesn’t have a transaction context (top part of the figure) and invokes addItem() with a MANDATORY attribute, an exception is thrown. The bottom part of Figure 
 shows the same combinations but with a client that has a transaction context.
 
-![Image](../../Images/Transactions_1.PNG)
+![Image](../../../Images/Transactions_1.PNG)
